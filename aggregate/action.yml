@@ -1,0 +1,29 @@
+name: 'Aggregate Summaries'
+description: 'GH action that aggregate tf summaries created by ohpen/summarize-tf-plan-step GH action'
+inputs:
+  print-summary:
+    description: >
+      boolean to print the summary in the GH workflow
+    required: true
+  attach-markdown-summary:
+    description: >
+      boolean to create a GH artifact containing the summary in markdown format.
+      Use this to avoid GITHUB_STEP_SUMMARY overflow
+    required: true
+  attach-csv-summary:
+    description: >
+      boolean to create a GH artifact containing the summary in CSV format. 
+    required: true
+
+outputs:
+  markdown-summary-file:
+    description: 'path to the markdown summary file'
+  csv-summary-file:
+    description: 'path to the csv summary file'
+  changes-detected:
+    description: 'boolean true only if changes were detected in the tf plan'
+
+runs:
+  using: 'node16'
+  main: 'index.js'
+  post: 'push-artifacts.js'
