@@ -1,0 +1,17 @@
+{
+  "name": "summarize-tf-plan-step",
+  "version": "1.0.0",
+  "description": "GH action that build a summary of a terraform plan in JSON format output by the terraform show -json command",
+  "main": "index.js",
+  "keywords": [
+    "tf-plan",
+    "terraform",
+    "summary-tf-plan"
+  ],
+  "author": "ohpen",
+  "license": "ISC",
+  "dependencies": {
+    "@actions/artifact": "^1.1.1",
+    "@actions/core": "^1.10.0"
+  }
+}

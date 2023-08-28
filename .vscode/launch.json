@@ -1,0 +1,45 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug summarize GH Action",
+            "type": "node",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/summarize/index.js",
+            "preLaunchTask": "[summarize] Create file for storing GH Step summary",
+            "cwd": "${workspaceFolder}/summarize/tests",
+            "env": {
+                "INPUT_JSON-TERRAFORM-PLAN-FILE": "json-tf-plan.example.json",
+                "INPUT_ENVIRONMENT": "ohp-dev",
+                "INPUT_PRINT-SUMMARY": "true",
+                "INPUT_ATTACH-MARKDOWN-SUMMARY": "true",
+                "INPUT_ATTACH-CSV-SUMMARY": "true",
+                "INPUT_ATTACH-JSON-SUMMARY": "true",
+                "GITHUB_STEP_SUMMARY": "gh_step_summary.html"
+            }
+        },
+        {
+            "name": "Debug aggregate GH Action",
+            "type": "node",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/aggregate/index.js",
+            "preLaunchTask": "[aggregate] Create file for storing results",
+            "cwd": "${workspaceFolder}/aggregate/tests",
+            "env": {
+                "INPUT_PRINT-SUMMARY": "true",
+                "INPUT_ATTACH-CSV-SUMMARY": "true",
+                "INPUT_ATTACH-MARKDOWN-SUMMARY": "true",
+                "GITHUB_STEP_SUMMARY": "gh_step_summary.html"
+            }
+        }
+    ]
+}
