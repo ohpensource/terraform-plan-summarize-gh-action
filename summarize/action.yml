@@ -1,0 +1,44 @@
+name: 'Build Summary'
+description: 'GH action that build a summary of a terraform plan. This must be output as terraform show -json command'
+inputs:
+  json-terraform-plan-file:
+    description: >
+      terraform plan exported as JSON using `terraform show -json`
+    required: true
+  environment:
+    description: >
+      environment name to add as a first column in all the summaries
+    required: true
+  print-summary:
+    description: >
+      boolean to print the summary in the GH workflow
+    required: true
+  attach-markdown-summary:
+    description: >
+      boolean to create a GH artifact containing the summary in markdown format.
+      Use this to avoid GITHUB_STEP_SUMMARY overflow
+    required: true
+  attach-csv-summary:
+    description: >
+      boolean to create a GH artifact containing the summary in CSV format. 
+    required: true
+  attach-json-summary:
+    description: >
+      boolean to create a GH artifact containing the summary in JSON format. 
+      Used this for aggregating result using ohpen/aggregate-tf-plan-summaries
+    required: true
+
+outputs:
+  markdown-summary-file:
+    description: 'path to the markdown summary file'
+  csv-summary-file:
+    description: 'path to the csv summary file'
+  json-summary-file:
+    description: 'path to the csv summary file'
+  changes-detected:
+    description: 'boolean true only if changes were detected in the tf plan'
+
+runs:
+  using: 'node16'
+  main: 'index.js'
+  post: 'push-artifacts.js'

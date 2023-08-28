@@ -1,0 +1,2 @@
+environment;resource;action;before;after
+ohp-dev;module.bucket.aws_s3_bucket.this[0];create;{};{"bucket":"katelynn-medhurst-14874531148","force_destroy":true,"object_lock_enabled":false,"timeouts":null}
