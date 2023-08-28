@@ -2,6 +2,13 @@
 Repository to store GH Actions related to summarize and aggregate terraform plans
 
 - [code-of-conduct](#code-of-conduct)
+- [github-action](#github-action)
+  - [summarize](#summarize)
+  - [aggregate](#aggregate)
+  - [How to run this locally?](#how-to-run-this-locally)
+    - [summarize test](#summarize-test)
+    - [aggregation test](#aggregation-test)
+
 
 ## code-of-conduct
 
@@ -57,24 +64,38 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: tf plan DEV
+        run: |
+          terraform init -backend-config="dev.tfvars.backend" 
+          terraform plan -var-file="dev.tfvars" -out="dev.tfplan"
+          # MOST IMPORTANT:
+          terraform show  -json "dev.tfplan" >> "dev.tfplan.json"
       - name: Create Summary for this step
         uses: ohpensource/terraform-plan-summarize-gh-action/summarize@v0.1.0.0 # update to last version
         with:
-          json-terraform-plan-file: dev_tf_plan.json
+          json-terraform-plan-file: dev.tfplan.json
           environment: 'dev'
           print-summary: true             # Print  the summary in the GH workflow
-          attach-markdown-summary: false  # flag for creating a MD file with the resources changed
+          attach-markdown-summary: true   # flag for creating a MD file with the resources changed
           attach-csv-summary: false       # flag for creating a CSV file with the resources changed
-          attach-json-summary: true       # set this to true if you want to aggregate them
+          attach-json-summary: true       # set this to true if you want to aggregate them using the `aggregate` described next
 
 ```
 
+Remarks:
+* In case you get the next error, enable any of the inputs `attach-*`  so you can get the artifacts and analyze the changes. 
+  * Recommendations: Enable `attach-csv-summary` and import the artifact file in Excel, or `attach-markdown-summary` and analyze the markdown in vscode.
+
+![](docs/imgs/error-gh-step-summary-too-big.png)
+
+* If you are going to aggregate multiple tfplans you can disable `print-summary` and only enable `attach-json-summary` so the aggregate GH action will get the changes
+
 ### aggregate
 
-It read all the artifacts created by the summarize GH action and aggregate them into one table:
+It reads all the artifacts created by the summarize GH action and aggregate them into one table:
 
-> ⚠️ You have to enable `attach-json-sumamry` in the `summarize` for exporting the terraform plan summary 
-> ⚠️ Then, make sure to download them all using the `actions/download-artifact@v3` GH action
+> ⚠️ You have to enable `attach-json-summary` in the `summarize` gh action so the tfplan summary is exported  
+> ⚠️ Then, make sure to download all using the `actions/download-artifact@v3` GH action
 
 
 ```yaml
@@ -87,10 +108,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: tf plan DEV
+        run: |
+          terraform init -backend-config="dev.tfvars.backend" 
+          terraform plan -var-file="dev.tfvars" -out="dev.tfplan"
+          # MOST IMPORTANT:
+          terraform show  -json "dev.tfplan" >> "dev.tfplan.json"
       - name: Create Summary for this step
         uses: ohpensource/terraform-plan-summarize-gh-action/summarize@v0.1.0.0 # TODO: update to last version
         with:
-          json-terraform-plan-file: dev_tf_plan.json
+          json-terraform-plan-file: dev.tfplan.json
           environment: 'dev'
           print-summary: true
           attach-markdown-summary: false
@@ -113,15 +140,26 @@ jobs:
 
 ### How to run this locally?
 
-A `.vscode/launch.json` has been attached to facilitate debugging using VS Code. 
+All GH actions have a `pretest` and `test` script defined in the package.json. First one will empty output artifacts and the second one will run the index.js with the input defined at `tests/.env`.
 
-![](docs/imgs/debug-in-vs-code.png)
-![](docs/imgs/debug-in-vs-code-2.png)
+```json
+  "scripts": {
+    "pretest": "node scripts/clean-test-files.js",
+    "test": "cd tests && node -r dotenv/config ../index.js"
+  },
+```
 
+⚠️ All the inputs are defined as a environment variable in tests/.env folder
 
-# summarize test
+#### summarize test
+
+```shell
+cd summarize
+npm run test
+```
 
 Test data for summarize GH action:
+  * [summarize/tests/.env](summarize/tests/.env): GH action inputs
   * [summarize/tests/json-tf-plan.example.json](summarize/tests/json-tf-plan.example.json): terraform plan in JSON format example.
 
 You can provide your own plan in the [summarize/tests/json-tf-plan.example.json](summarize/tests/json-tf-plan.example.json) but make sure to generate it as next:
@@ -135,10 +173,14 @@ terraform show -json "$TF_PLAN_PATH"  >> "$TF_PLAN_JSON"
 
 Then, paste $TF_PLAN_JSON content into [summarize/tests/json-tf-plan.example.json](summarize/tests/json-tf-plan.example.json).
 
-# aggregation test
+#### aggregation test
+
+```shell
+cd aggregate
+npm run test
+```
 
 You can update or extend any of the next files:
+  * [aggregate/tests/.env](aggregate/tests/.env): GH action inputs
   * [aggregate/tests/ohp-dev-summary-json/ohp-dev-summary.json](aggregate/tests/ohp-dev-summary-json/ohp-dev-summary.json)
   * [aggregate/tests/ohp-dev2-summary-json/ohp-dev2-summary.json](aggregate/tests/ohp-dev2-summary-json/ohp-dev2-summary.json)
-
-You can also paste the output of the terraform summarize action.
