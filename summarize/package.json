@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "GH action that build a summary of a terraform plan in JSON format output by the terraform show -json command",
   "main": "index.js",
+  "scripts": {
+    "pretest": "node scripts/clean-test-files.js",
+    "test": "cd tests && node -r dotenv/config ../index.js"
+  },
   "keywords": [
     "tf-plan",
     "terraform",
@@ -13,5 +17,8 @@
   "dependencies": {
     "@actions/artifact": "^1.1.1",
     "@actions/core": "^1.10.0"
+  },
+  "devDependencies": {
+    "dotenv": "^16.3.1"
   }
 }
