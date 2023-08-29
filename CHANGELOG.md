@@ -1,3 +1,11 @@
+# :confetti_ball: 0.0.3 (2023-08-29T07:45:52.603Z)
+- - -
+## :bug: Fixes
+* LANZ-4137 deleted not needed .vscode files
+* LANZ-4137 added extra node_module for dotenv/config
+* LANZ-4137 update package.json for testing GH actions and created scripts for emptying clean-test-files.
+- - -
+- - -
 # :confetti_ball: 0.0.2 (2023-08-28T18:45:12.467Z)
 - - -
 ## :bug: Fixes
