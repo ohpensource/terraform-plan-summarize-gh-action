@@ -63,6 +63,16 @@ async function writeSummaryToGHStepSummary(summaries) {
         ])
     }
 
+    const totalRow = [
+        'Total',
+        `<strong>${summaries.map(s => s.deleted).reduce((a, b) => a + b, 0)}</strong>`,
+        `<strong>${summaries.map(s => s.created).reduce((a, b) => a + b, 0)}</strong>`,
+        `<strong>${summaries.map(s => s.updated).reduce((a, b) => a + b, 0)}</strong>`,
+        `<strong>${summaries.map(s => s.replaced).reduce((a, b) => a + b, 0)}</strong>`
+    ]
+
+    tableData.push(totalRow)
+
     await core.summary
         .addHeading(`Summary`)
         .addTable(tableData)
