@@ -1,3 +1,9 @@
+# :confetti_ball: 0.1.0 (2023-08-31T14:01:15.348Z)
+- - -
+## :hammer: Features
+* LANZ-4137 added total row and set number to (#4)
+- - -
+- - -
 # :confetti_ball: 0.0.3 (2023-08-29T07:45:52.603Z)
 - - -
 ## :bug: Fixes
