@@ -5,12 +5,13 @@ Repository to store GH Actions related to summarize and aggregate terraform plan
 - [github-action](#github-action)
   - [summarize](#summarize)
   - [aggregate](#aggregate)
+  - [changes that are ignored by the summary](#changes-that-are-ignored-by-the-summary)
   - [How to run this locally?](#how-to-run-this-locally)
     - [summarize test](#summarize-test)
     - [aggregation test](#aggregation-test)
 
 
-## code-of-conduct
+# code-of-conduct
 
 Go crazy on the pull requests :) ! The only requirements are:
 
@@ -18,11 +19,11 @@ Go crazy on the pull requests :) ! The only requirements are:
 > - Include _jira-tickets_ in your commits.
 > - Create/Update the documentation of the use case you are creating, improving or fixing. **[Boy scout](https://biratkirat.medium.com/step-8-the-boy-scout-rule-robert-c-martin-uncle-bob-9ac839778385) rules apply**. That means, for example, if you fix an already existing workflow, please include the necessary documentation to help everybody. The rule of thumb is: _leave the place (just a little bit)better than when you came_.
 
-## github-action
+# github-action
 
 This repository contains the next two GH actions:
 
-### summarize
+## summarize
 
 This action parse a terraform plan and extract its changes and metrics. It also can create artifacts with this information. Next is a JSON artifact example:
 
@@ -90,7 +91,7 @@ Remarks:
 
 * If you are going to aggregate multiple tfplans you can disable `print-summary` and only enable `attach-json-summary` so the aggregate GH action will get the changes
 
-### aggregate
+## aggregate
 
 It reads all the artifacts created by the summarize GH action and aggregate them into one table:
 
@@ -138,7 +139,12 @@ jobs:
           attach-csv-summary: true
 ```
 
-### How to run this locally?
+
+## changes that are ignored by the summary
+
+Changes that only modify resource tags are ignored in the summary.
+
+## How to run this locally?
 
 All GH actions have a `pretest` and `test` script defined in the package.json. First one will empty output artifacts and the second one will run the index.js with the input defined at `tests/.env`.
 
@@ -151,7 +157,7 @@ All GH actions have a `pretest` and `test` script defined in the package.json. F
 
 ⚠️ All the inputs are defined as a environment variable in tests/.env folder
 
-#### summarize test
+### summarize test
 
 ```shell
 cd summarize
@@ -173,7 +179,7 @@ terraform show -json "$TF_PLAN_PATH"  >> "$TF_PLAN_JSON"
 
 Then, paste $TF_PLAN_JSON content into [summarize/tests/json-tf-plan.example.json](summarize/tests/json-tf-plan.example.json).
 
-#### aggregation test
+### aggregation test
 
 ```shell
 cd aggregate
@@ -184,4 +190,3 @@ You can update or extend any of the next files:
   * [aggregate/tests/.env](aggregate/tests/.env): GH action inputs
   * [aggregate/tests/ohp-dev-summary-json/ohp-dev-summary.json](aggregate/tests/ohp-dev-summary-json/ohp-dev-summary.json)
   * [aggregate/tests/ohp-dev2-summary-json/ohp-dev2-summary.json](aggregate/tests/ohp-dev2-summary-json/ohp-dev2-summary.json)
-
