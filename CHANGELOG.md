@@ -1,3 +1,9 @@
+# :confetti_ball: 0.1.1 (2023-09-01T11:19:54.127Z)
+- - -
+## :newspaper: Others
+* docs: LANZ-4137 updated docs explaining changes in tags are ignored (#5)
+- - -
+- - -
 # :confetti_ball: 0.1.0 (2023-08-31T14:01:15.348Z)
 - - -
 ## :hammer: Features
