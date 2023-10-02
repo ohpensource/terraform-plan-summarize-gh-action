@@ -25,7 +25,7 @@ This repository contains the next two GH actions:
 
 ## summarize
 
-This action parse a terraform plan and extract its changes and metrics. It also can create artifacts with this information. Next is a JSON artifact example:
+This action parse and summarize a terraform plan, print the summary in the [job summary](https://github.blog/2022-05-09-supercharging-github-actions-with-job-summaries/) and export them as artifacts. Next is an example:
 
 ```json
 {
@@ -53,7 +53,7 @@ This action parse a terraform plan and extract its changes and metrics. It also 
 }
 ```
 
-Please note the `environment` is added from the inputs for aggregate metrics from different terraform plans.
+Please note the `environment` is added from the inputs. It is used for aggregating different terraform plans metrics. 
 
 ```yaml
 name: CI
@@ -72,10 +72,10 @@ jobs:
           # MOST IMPORTANT:
           terraform show  -json "dev.tfplan" >> "dev.tfplan.json"
       - name: Create Summary for this step
-        uses: ohpensource/terraform-plan-summarize-gh-action/summarize@v0.1.0.0 # update to last version
+        uses: ohpensource/terraform-plan-summarize-gh-action/summarize@v0.1.1 # update to last version
         with:
           json-terraform-plan-file: dev.tfplan.json
-          environment: 'dev'
+          environment: 'dev'              # Used for summaries and artifacts names. DO NOT PROVIDE values with "/"
           print-summary: true             # Print  the summary in the GH workflow
           attach-markdown-summary: true   # flag for creating a MD file with the resources changed
           attach-csv-summary: false       # flag for creating a CSV file with the resources changed
@@ -83,13 +83,19 @@ jobs:
 
 ```
 
+
+
 Remarks:
+* The inputs `attach-*` will create GH artifacts to export the summaries in the format specified. Those artifact are named as the `environment` variable:
+
+![](docs/imgs/tf-plan-summary-artifacts.png)
+
 * In case you get the next error, enable any of the inputs `attach-*`  so you can get the artifacts and analyze the changes. 
   * Recommendations: Enable `attach-csv-summary` and import the artifact file in Excel, or `attach-markdown-summary` and analyze the markdown in vscode.
 
 ![](docs/imgs/error-gh-step-summary-too-big.png)
 
-* If you are going to aggregate multiple tfplans you can disable `print-summary` and only enable `attach-json-summary` so the aggregate GH action will get the changes
+* If you are going to aggregate multiple tfplans you can disable `print-summary` and only enable `attach-json-summary` so the aggregate GH action (described next) will get them.
 
 ## aggregate
 
@@ -116,10 +122,10 @@ jobs:
           # MOST IMPORTANT:
           terraform show  -json "dev.tfplan" >> "dev.tfplan.json"
       - name: Create Summary for this step
-        uses: ohpensource/terraform-plan-summarize-gh-action/summarize@v0.1.0.0 # TODO: update to last version
+        uses: ohpensource/terraform-plan-summarize-gh-action/summarize@v0.1.1 # update this to the latest version
         with:
           json-terraform-plan-file: dev.tfplan.json
-          environment: 'dev'
+          environment: 'dev'        # this will be used for the summary first column and artifacts names. DO NOT PROVIDE values with "/"
           print-summary: true
           attach-markdown-summary: false
           attach-csv-summary: false
@@ -132,13 +138,25 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/download-artifact@v3    # Download the tf plan summaries
       - name: Aggregate results
-        uses: ohpensource/terraform-plan-summarize-gh-action/aggregate@v0.1.0.0 # TODO: update to last version
+        uses: ohpensource/terraform-plan-summarize-gh-action/aggregate@v0.1.1 # update this to the latest version
         with:
           print-summary: true
           attach-markdown-summary: true
           attach-csv-summary: true
 ```
 
+Example:
+
+tf plans aggregated: 
+
+![](docs/imgs/tf-plans-agregated.png)
+
+resources changed details. Please note the last columns is `after`.
+
+![](docs/imgs/tf-plans-agregated-resource-details.png)
+![](docs/imgs/tf-plans-agregated-resource-details-2.png)
+
+Please note you can copy the content in the `before` and `after` column. 
 
 ## changes that are ignored by the summary
 
