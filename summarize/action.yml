@@ -7,7 +7,7 @@ inputs:
     required: true
   environment:
     description: >
-      environment name to add as a first column in all the summaries
+      environment name to add as a first column in all the summaries. It shouldn't include "/", that character will be replaced by "-"
     required: true
   print-summary:
     description: >

@@ -8,7 +8,7 @@ const { buildChangesSummary } = require('./functions/buildChangesSummary');
 async function run() {
   try {
     const planJSON = core.getInput('json-terraform-plan-file')
-    const environment = core.getInput('environment')
+    const environment = core.getInput('environment').replace('/', '-')
     const printSummary = core.getBooleanInput('print-summary')
     const exportMarkdown = core.getBooleanInput('attach-markdown-summary')
     const exportCSV = core.getBooleanInput('attach-csv-summary')
