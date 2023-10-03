@@ -12,7 +12,7 @@ async function run() {
       retentionDays: 1
     }
 
-    const environment = core.getInput('environment')
+    const environment = core.getInput('environment').replace('/', '-')
     const exportMarkdown = core.getBooleanInput('attach-markdown-summary')
     const exportCSV = core.getBooleanInput('attach-csv-summary')
     const exportJSON = core.getBooleanInput('attach-json-summary')

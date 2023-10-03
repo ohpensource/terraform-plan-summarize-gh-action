@@ -83,8 +83,6 @@ jobs:
 
 ```
 
-
-
 Remarks:
 * The inputs `attach-*` will create GH artifacts to export the summaries in the format specified. Those artifact are named as the `environment` variable:
 
