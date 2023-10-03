@@ -1,3 +1,9 @@
+# :confetti_ball: 0.1.3 (2023-10-03T13:13:08.243Z)
+- - -
+## :bug: Fixes
+* LANZ-4137 [summarize] solved error when input.environment contains a "/". Now it will be replaced by "-". Updated readme (#7)
+- - -
+- - -
 # :confetti_ball: 0.1.2 (2023-10-03T12:50:34.420Z)
 - - -
 ## :bug: Fixes
