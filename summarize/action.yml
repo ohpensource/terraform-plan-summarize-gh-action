@@ -39,6 +39,6 @@ outputs:
     description: 'boolean true only if changes were detected in the tf plan'
 
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'index.js'
   post: 'push-artifacts.js'
